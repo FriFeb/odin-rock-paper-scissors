@@ -2,6 +2,12 @@ const ROCK = "Rock";
 const PAPER = "Paper";
 const SCISSORS = "Scissors";
 
+let playerSelection = prompt(
+  "Enter your choice (rock, paper, scissors)",
+  "Rock"
+);
+const computerSelection = getComputerChoice();
+
 /*
 getComputerChoice function 
   randomly returns either rock, paper or scissors.
@@ -24,6 +30,48 @@ function getComputerChoice() {
     case 2:
       return SCISSORS;
   }
+}
+
+/*
+validatePlayerInput function
+  takes playerSelection and validates it
+
+    /
+
+      IF playerSelection is not equal either 
+      ‘Rock’, ‘Paper’ or ‘Scissors’ in any case
+        TRUE
+          return false
+        FALSE
+          rewrite playerSelection with global value
+
+    / ---> true if input is valid or false if not
+
+*/
+
+function isValidPlayerInput() {
+  if (
+    playerSelection === "ROCK" ||
+    playerSelection === "Rock" ||
+    playerSelection === "rock"
+  ) {
+    playerSelection = ROCK;
+    return true;
+  } else if (
+    playerSelection === "PAPER" ||
+    playerSelection === "Paper" ||
+    playerSelection === "paper"
+  ) {
+    playerSelection = PAPER;
+    return true;
+  } else if (
+    playerSelection === "SCISSORS" ||
+    playerSelection === "Scissors" ||
+    playerSelection === "scissors"
+  ) {
+    playerSelection = SCISSORS;
+    return true;
+  } else return false;
 }
 
 /*
@@ -100,40 +148,26 @@ playRound function
 
     playerSelection, computerSelection ---> /
 
-      same logic as above but returns
-        0 if user lose
-        1 if user win
-        2 if tie
-      calls showRoundResult function
+      IF isValidPlayerInput is false
+        TRUE 
+          return message "Wrong option!"
+        FALSE
+          same logic as above but returns
+            0 if user lose
+            1 if user win
+            2 if tie
+          calls showRoundResult function
 
     / ---> result of the round
 
 */
 
-function playRound(playerSelection, computerSelection) {
+function playRound() {
+  if (isValidPlayerInput() === false) {
+    return console.log("Wrong option!");
+  }
+
   let result;
-
-  if (
-    playerSelection === "ROCK" ||
-    playerSelection === "Rock" ||
-    playerSelection === "rock"
-  )
-    playerSelection = ROCK;
-  else if (
-    playerSelection === "PAPER" ||
-    playerSelection === "Paper" ||
-    playerSelection === "paper"
-  )
-    playerSelection = PAPER;
-  else if (
-    playerSelection === "SCISSORS" ||
-    playerSelection === "Scissors" ||
-    playerSelection === "scissors"
-  )
-    playerSelection = SCISSORS;
-  else return "Wrong variant!";
-
-  if (playerSelection === computerSelection) result = 2;
 
   if (playerSelection === ROCK) {
     result = computerSelection === PAPER ? 0 : 1;
@@ -147,7 +181,9 @@ function playRound(playerSelection, computerSelection) {
     result = computerSelection === ROCK ? 0 : 1;
   }
 
-  showRoundResult(result, playerSelection, computerSelection);
+  if (playerSelection === computerSelection) result = 2;
+
+  showRoundResult(result);
   return result;
 }
 
@@ -172,7 +208,7 @@ showRoundResult function
     /
 */
 
-function showRoundResult(result, playerSelection, computerSelection) {
+function showRoundResult(result) {
   if (result === 0) {
     console.log(`You Lose! ${computerSelection} beats ${playerSelection}`);
   } else if (result === 1) {
@@ -211,9 +247,4 @@ game function
 
 function game() {}
 
-const playerSelection = prompt(
-  "Enter your choice (rock, paper, scissors)",
-  "Rock"
-);
-const computerSelection = getComputerChoice();
-playRound(playerSelection, computerSelection);
+playRound();
