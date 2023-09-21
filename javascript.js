@@ -144,39 +144,63 @@ function showRoundResult(result) {
 }
 
 /* 
-game function 
+playGame function 
   plays a 5 round game that keeps score 
-  and reports a winner or loser at the end
 
     computerSelection, playerSelection ---> /
 
+      create playerScore and computerScore with value 0
       play 5 rounds
-        call playRound function 5 times
+        - call playRound function 5 times
       keep score 
-        - rewrite playRound function so it returns true 
-        if user win and false if user lose
-        - create showRoundResult function that prints 
-        winner or loser of the round
-        - create userScore and computerScore with value 0
         - add +1 to userScore if user wins
         - add +1 to computerScore if computer wins
-      report a winner or loser 
-        - IF userScore > computerScore
-            TRUE
-              print "You win the game!"
-            FALSE
-              print "You lose the game!"
+      call showGameResult()
 
     /
 */
 
-function game() {
+function playGame() {
+  let playerScore = 0,
+    computerScore = 0;
+
   for (let i = 0; i < 5; i++) {
     playerSelection = getPlayerChoice();
     computerSelection = getComputerChoice();
 
-    playRound();
+    const result = playRound();
+
+    if (result === 0) computerScore++;
+    else if (result === 1) playerScore++;
   }
+
+  showGameResult(playerScore, computerScore);
 }
 
-game();
+/*
+showGameResult
+
+  playerScore, computerScore ---> {
+
+    report a winner or loser 
+      IF playerScore > computerScore
+        TRUE
+          print "You win the game!"
+      ELSE IF playerScore < computerScore
+        TRUE
+          print "You lose the game!"
+      ELSE 
+        print "Tie!"
+
+  } 
+*/
+
+function showGameResult(playerScore, computerScore) {
+  console.log(`Score: ${playerScore} - ${computerScore}`);
+
+  if (playerScore > computerScore) console.log(`You Win the game!`);
+  else if (playerScore < computerScore) console.log(`You Lose the game!`);
+  else console.log(`Tie!`);
+}
+
+playGame();
