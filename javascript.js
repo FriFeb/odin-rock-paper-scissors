@@ -38,7 +38,7 @@ function validatePlayerChoice(input) {
   if (input === "SCISSORS" || input === "Scissors" || input === "scissors")
     return SCISSORS;
 
-  validatePlayerChoice(
+  return validatePlayerChoice(
     prompt(
       "Check out the variants in parenthesis (rock, paper, scissors)",
       "Rock"
