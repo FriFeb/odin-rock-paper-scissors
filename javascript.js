@@ -2,11 +2,49 @@ const ROCK = "Rock";
 const PAPER = "Paper";
 const SCISSORS = "Scissors";
 
-let playerSelection = prompt(
-  "Enter your choice (rock, paper, scissors)",
-  "Rock"
-);
-const computerSelection = getComputerChoice();
+let playerSelection;
+let computerSelection;
+
+/*
+getPlayerChoice
+
+  {
+  } ---> return result of validatePlayerChoice function call
+*/
+
+function getPlayerChoice() {
+  return validatePlayerChoice(
+    prompt("Enter your choice (rock, paper, scissors)", "Rock")
+  );
+}
+
+/*
+validatePlayerChoice
+
+  player input from prompt ---> {
+    
+    IF input is not one of the valid options
+      TRUE
+        ask to input again
+      FALSE 
+        write that option to playerSelection
+
+  }
+*/
+
+function validatePlayerChoice(input) {
+  if (input === "ROCK" || input === "Rock" || input === "rock") return ROCK;
+  if (input === "PAPER" || input === "Paper" || input === "paper") return PAPER;
+  if (input === "SCISSORS" || input === "Scissors" || input === "scissors")
+    return SCISSORS;
+
+  validatePlayerChoice(
+    prompt(
+      "Check out the variants in parenthesis (rock, paper, scissors)",
+      "Rock"
+    )
+  );
+}
 
 /*
 getComputerChoice function 
@@ -33,140 +71,22 @@ function getComputerChoice() {
 }
 
 /*
-validatePlayerInput function
-  takes playerSelection and validates it
-
-    /
-
-      IF playerSelection is not equal either 
-      ‘Rock’, ‘Paper’ or ‘Scissors’ in any case
-        TRUE
-          return false
-        FALSE
-          rewrite playerSelection with global value
-
-    / ---> true if input is valid or false if not
-
-*/
-
-function isValidPlayerInput() {
-  if (
-    playerSelection === "ROCK" ||
-    playerSelection === "Rock" ||
-    playerSelection === "rock"
-  ) {
-    playerSelection = ROCK;
-    return true;
-  } else if (
-    playerSelection === "PAPER" ||
-    playerSelection === "Paper" ||
-    playerSelection === "paper"
-  ) {
-    playerSelection = PAPER;
-    return true;
-  } else if (
-    playerSelection === "SCISSORS" ||
-    playerSelection === "Scissors" ||
-    playerSelection === "scissors"
-  ) {
-    playerSelection = SCISSORS;
-    return true;
-  } else return false;
-}
-
-/*
 playRound function
-  plays a single round of the game, it takes 2 parameters - 
-  the playerSelection and computerSelection - and then returns a string 
-  that declares the winner of the round like so: "You Lose! Paper beats Rock"
-    it takes a string with playerSelection 
-    (should be case-sensitive "Rock", "rock", "ROCk")
-    and the result of computerSelection function ---> /   
 
-        IF inputs are equal
-            TRUE
-                return "Tie!"
+  playerSelection, computerSelection ---> /
 
-        ELSE IF playerSelection === "Rock" 
-            IF computerSelection === "Paper"
-                TRUE
-                    return "You Lose! Paper beats Rock"
-                ELSE 
-                    return "You Win! Rock beats Scissors"
+    choose winner
+      compare options
+      0 if user lose
+      1 if user win
+      2 if tie
+    calls showRoundResult function
 
-        ELSE IF playerSelection === "Paper" 
-            IF computerSelection === "SCISSORS"
-                TRUE
-                    return "You Lose! Scissors beats Paper"
-                ELSE 
-                    return "You Win! Paper beats Rock"
-
-        ELSE IF playerSelection === "Scissors" 
-            IF computerSelection === "Rock"
-                TRUE
-                    return "You Lose! Rock beats Scissors"
-                ELSE 
-                    return "You Win! Scissors beats Paper"
-
-
-        Seems like a lot of code and repetitions
-        So, maybe it'd be better to optimize a bit 
-        If we use number against strings 
-        like "Rock" = 0, "Paper" = 1 and "Scissors" = 2
-        We can simplify our conditions 
-
-                0 < 1 < 2 < 0
-
-        IF playerSelection === computerSelection
-            TRUE
-                return "Tie!"
-
-        IF playerSelection < computerSelection
-            IF playerSelection === 0 && computerSelection === 2
-                TRUE
-                    return "You Win! {playerSelection} beats {computerSelection}"
-            TRUE
-                return "You Lose! {computerSelection} beats {playerSelection}"
-
-        IF playerSelection > computerSelection
-            IF playerSelection === 2 && computerSelection === 0
-                TRUE
-                    return "You Lose! {playerSelection} beats {computerSelection}"
-            TRUE
-                return "You Win! {playerSelection} beats {computerSelection}"
-
-        But I will stick to the first option for now
-
-    / ---> it returns a string that declares the winner of the round 
-    like so: "You Lose! Paper beats Rock"
-    or: "You Win! Rock beats Scissors"
-    or: "Tie!"
-
-
-
-    //    //    //    NEW ALGORITHM     \\    \\    \\
-
-    playerSelection, computerSelection ---> /
-
-      IF isValidPlayerInput is false
-        TRUE 
-          return message "Wrong option!"
-        FALSE
-          same logic as above but returns
-            0 if user lose
-            1 if user win
-            2 if tie
-          calls showRoundResult function
-
-    / ---> result of the round
+  / ---> result of the round
 
 */
 
 function playRound() {
-  if (isValidPlayerInput() === false) {
-    return console.log("Wrong option!");
-  }
-
   let result;
 
   if (playerSelection === ROCK) {
@@ -202,8 +122,11 @@ showRoundResult function
         TRUE 
           print "You Win! {playerSelection} beats {computerSelection}"
 
-      ELSE
+      ELSE IF result === 2
         print "Tie!"
+
+      ELSE
+        print "Error!"
 
     /
 */
@@ -213,8 +136,10 @@ function showRoundResult(result) {
     console.log(`You Lose! ${computerSelection} beats ${playerSelection}`);
   } else if (result === 1) {
     console.log(`You Win! ${playerSelection} beats ${computerSelection}`);
-  } else {
+  } else if (result === 2) {
     console.log("Tie!");
+  } else {
+    console.log("Error!");
   }
 }
 
@@ -223,7 +148,7 @@ game function
   plays a 5 round game that keeps score 
   and reports a winner or loser at the end
 
-    it takes computerSelection and playerSelection ---> /
+    computerSelection, playerSelection ---> /
 
       play 5 rounds
         call playRound function 5 times
@@ -242,9 +167,16 @@ game function
             FALSE
               print "You lose the game!"
 
-    / ---> it shows the winner of the game with console.log()
+    /
 */
 
-function game() {}
+function game() {
+  for (let i = 0; i < 5; i++) {
+    playerSelection = getPlayerChoice();
+    computerSelection = getComputerChoice();
 
-playRound();
+    playRound();
+  }
+}
+
+game();
