@@ -5,32 +5,11 @@ const SCISSORS = "Scissors";
 let playerSelection;
 let computerSelection;
 
-/*
-getPlayerChoice
-
-  {
-  } ---> return result of validatePlayerChoice function call
-*/
-
 function getPlayerChoice() {
   return validatePlayerChoice(
     prompt("Enter your choice (rock, paper, scissors)", "Rock")
   );
 }
-
-/*
-validatePlayerChoice
-
-  player input from prompt ---> {
-    
-    IF input is not one of the valid options
-      TRUE
-        ask to input again
-      FALSE 
-        write that option to playerSelection
-
-  }
-*/
 
 function validatePlayerChoice(input) {
   if (input === "ROCK" || input === "Rock" || input === "rock") return ROCK;
@@ -46,17 +25,6 @@ function validatePlayerChoice(input) {
   );
 }
 
-/*
-getComputerChoice function 
-  randomly returns either rock, paper or scissors.
-    /
-
-        generate random number from 0 to 2  
-        choose the option corresponding to that number
-
-    / ---> return the option
-*/
-
 function getComputerChoice() {
   const choice = Math.floor(Math.random() * 3);
 
@@ -69,22 +37,6 @@ function getComputerChoice() {
       return SCISSORS;
   }
 }
-
-/*
-playRound function
-
-  playerSelection, computerSelection ---> /
-
-    choose winner
-      compare options
-      0 if user lose
-      1 if user win
-      2 if tie
-    calls showRoundResult function
-
-  / ---> result of the round
-
-*/
 
 function playRound() {
   let result;
@@ -107,30 +59,6 @@ function playRound() {
   return result;
 }
 
-/*
-showRoundResult function 
-  takes the result of playRound function
-  and prints a winner or loser
-
-    result of playRound function, playerSelection, computerSelection ---> /
-
-      IF result === 0
-        TRUE
-          print "You Lose! {computerSelection} beats {playerSelection}"
-
-      ELSE IF result === 1
-        TRUE 
-          print "You Win! {playerSelection} beats {computerSelection}"
-
-      ELSE IF result === 2
-        print "Tie!"
-
-      ELSE
-        print "Error!"
-
-    /
-*/
-
 function showRoundResult(result) {
   if (result === 0) {
     console.log(`You Lose! ${computerSelection} beats ${playerSelection}`);
@@ -142,23 +70,6 @@ function showRoundResult(result) {
     console.log("Error!");
   }
 }
-
-/* 
-playGame function 
-  plays a 5 round game that keeps score 
-
-    computerSelection, playerSelection ---> /
-
-      create playerScore and computerScore with value 0
-      play 5 rounds
-        - call playRound function 5 times
-      keep score 
-        - add +1 to userScore if user wins
-        - add +1 to computerScore if computer wins
-      call showGameResult()
-
-    /
-*/
 
 function playGame() {
   let playerScore = 0,
@@ -176,24 +87,6 @@ function playGame() {
 
   showGameResult(playerScore, computerScore);
 }
-
-/*
-showGameResult
-
-  playerScore, computerScore ---> {
-
-    report a winner or loser 
-      IF playerScore > computerScore
-        TRUE
-          print "You win the game!"
-      ELSE IF playerScore < computerScore
-        TRUE
-          print "You lose the game!"
-      ELSE 
-        print "Tie!"
-
-  } 
-*/
 
 function showGameResult(playerScore, computerScore) {
   console.log(`Score: ${playerScore} - ${computerScore}`);
