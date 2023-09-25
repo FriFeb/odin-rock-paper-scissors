@@ -2,27 +2,20 @@ const ROCK = "Rock";
 const PAPER = "Paper";
 const SCISSORS = "Scissors";
 
-let playerSelection;
-let computerSelection;
+let computerScore = 0,
+  playerScore = 0,
+  computerChoice,
+  playerChoice;
 
-function getPlayerChoice() {
-  return validatePlayerChoice(
-    prompt("Enter your choice (rock, paper, scissors)", "Rock")
-  );
-}
+const buttonList = document.querySelector(".buttons");
+const roundResultDiv = document.querySelector(".results");
+const playerScoreSpan = document.querySelector(".playerScore");
+const computerScoreSpan = document.querySelector(".computerScore");
 
-function validatePlayerChoice(input) {
-  if (input === "ROCK" || input === "Rock" || input === "rock") return ROCK;
-  if (input === "PAPER" || input === "Paper" || input === "paper") return PAPER;
-  if (input === "SCISSORS" || input === "Scissors" || input === "scissors")
-    return SCISSORS;
-
-  return validatePlayerChoice(
-    prompt(
-      "Check out the variants in parenthesis (rock, paper, scissors)",
-      "Rock"
-    )
-  );
+function getPlayerChoice(choice) {
+  if (choice === "Rock") return ROCK;
+  if (choice === "Paper") return PAPER;
+  if (choice === "Scissors") return SCISSORS;
 }
 
 function getComputerChoice() {
@@ -39,61 +32,68 @@ function getComputerChoice() {
 }
 
 function playRound() {
-  let result;
+  let roundResult;
 
-  if (playerSelection === ROCK) {
-    result = computerSelection === PAPER ? 0 : 1;
+  if (playerChoice === ROCK) {
+    roundResult = computerChoice === PAPER ? 0 : 1;
   }
 
-  if (playerSelection === PAPER) {
-    result = computerSelection === SCISSORS ? 0 : 1;
+  if (playerChoice === PAPER) {
+    roundResult = computerChoice === SCISSORS ? 0 : 1;
   }
 
-  if (playerSelection === SCISSORS) {
-    result = computerSelection === ROCK ? 0 : 1;
+  if (playerChoice === SCISSORS) {
+    roundResult = computerChoice === ROCK ? 0 : 1;
   }
 
-  if (playerSelection === computerSelection) result = 2;
+  if (playerChoice === computerChoice) roundResult = 2;
 
-  showRoundResult(result);
-  return result;
+  return roundResult;
 }
 
-function showRoundResult(result) {
-  if (result === 0) {
-    console.log(`You Lose! ${computerSelection} beats ${playerSelection}`);
-  } else if (result === 1) {
-    console.log(`You Win! ${playerSelection} beats ${computerSelection}`);
-  } else if (result === 2) {
-    console.log("Tie!");
+function showRoundResult(roundResult) {
+  if (roundResult === 0) {
+    roundResultDiv.innerText = `You Lose! ${computerChoice} beats ${playerChoice}`;
+  } else if (roundResult === 1) {
+    roundResultDiv.innerText = `You Win! ${playerChoice} beats ${computerChoice}`;
+  } else if (roundResult === 2) {
+    roundResultDiv.innerText = "Tie!";
   } else {
-    console.log("Error!");
+    roundResultDiv.innerText = "Error!";
   }
 }
 
-function playGame() {
-  let playerScore = 0,
-    computerScore = 0;
+function showUpdatedScore() {
+  playerScoreSpan.innerText = playerScore;
+  computerScoreSpan.innerText = computerScore;
+}
 
-  for (let i = 0; i < 5; i++) {
-    playerSelection = getPlayerChoice();
-    computerSelection = getComputerChoice();
+function showGameResult() {
+  if (playerScore > computerScore)
+    roundResultDiv.innerText = `You Win the game!`;
+  else if (playerScore < computerScore)
+    roundResultDiv.innerText = `You Lose the game!`;
+  else roundResultDiv.innerText = `Tie! Game is over`;
+}
 
-    const result = playRound();
+function playGame(e) {
+  if (e.target.nodeName !== "BUTTON") return;
 
-    if (result === 0) computerScore++;
-    else if (result === 1) playerScore++;
+  playerChoice = getPlayerChoice(e.target.dataset.choice);
+  computerChoice = getComputerChoice();
+
+  const roundResult = playRound();
+  showRoundResult(roundResult);
+
+  if (roundResult === 0) computerScore++;
+  if (roundResult === 1) playerScore++;
+
+  showUpdatedScore();
+
+  if (computerScore === 5 || playerScore === 5) {
+    showGameResult();
+    buttonList.removeEventListener("click", playGame);
   }
-
-  showGameResult(playerScore, computerScore);
 }
 
-function showGameResult(playerScore, computerScore) {
-  console.log(`Score: ${playerScore} - ${computerScore}`);
-
-  if (playerScore > computerScore) console.log(`You Win the game!`);
-  else if (playerScore < computerScore) console.log(`You Lose the game!`);
-  else console.log(`Tie!`);
-}
-
-playGame();
+buttonList.addEventListener("click", playGame);
